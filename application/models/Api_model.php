@@ -181,6 +181,103 @@ class Api_Model extends CI_Model
     return $this->response();
   }
 
+  // QUESTION ANSWERS
+  public function get_question_answer_details($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // CHECK QUESTION NOT EXIST
+    $get_question_answer_details = $this->Question_answer_model->get_question_answer_details($data);
+
+    $description = 'No Question Found.';
+    $this->return = false;
+    $this->data = [];
+
+    if ($get_question_answer_details != null) {
+      $description = 'Question Details Fetched.';
+
+      $this->return = true;
+      $this->data = (array) $get_question_answer_details;
+    }
+
+    $this->status_header = 200;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'OK';
+    $this->description = $description;
+
+    return $this->response();
+  }
+
+  public function get_question_answers($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // CHECK QUESTION ANSWERS NOT EXIST
+    $get_question_answers = $this->Question_answer_model->get_question_answers($data);
+
+    $description = 'No Questions Found.';
+    $this->return = false;
+    $this->data = [];
+
+    if ($get_question_answers != null) {
+      $description = 'Question Answers Fetched.';
+
+      $this->return = true;
+      $this->data = (array) $get_question_answers;
+    }
+
+    $this->status_header = 200;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'OK';
+    $this->description = $description;
+
+    return $this->response();
+  }
+
+  public function insert_question_answer($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // INSERT QUESTION ANSWER
+    $insert_question_answer = $this->Question_answer_model->insert_question_answer($data);
+
+    if (!$insert_question_answer) {
+      // failed to insert question answer
+      $this->status_header = 500;
+      $this->output->set_status_header($this->status_header);
+
+      $this->status_code = $this->status_header;
+      $this->status = 'failed';
+      $this->message = 'Internal Server Error';
+      $this->description = 'Failed to insert question answer, please contact the support and try again later.';
+      $this->data = [];
+
+      $this->return = false;
+      return $this->response();
+    }
+
+    $this->status_header = 201;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'Created';
+    $this->description = 'Question Answer Created.';
+    $this->data = [
+      'question_answer_id' => $this->db->insert_id(),
+      'answer' => $data['answer']
+    ];
+
+    $this->return = true;
+    return $this->response();
+  }
+
   // QUESTIONS
   public function get_question_details($data)
   {
@@ -272,7 +369,301 @@ class Api_Model extends CI_Model
     $this->data = [
       'question_id' => $this->db->insert_id(),
       'question_title' => $data['question_title'],
-      'question' => $data['question'],
+      'question' => $data['question']
+    ];
+
+    $this->return = true;
+    return $this->response();
+  }
+
+  // QUESTION SOLUTION
+  public function get_question_solution_details($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // CHECK QUESTION SOLUTION NOT EXIST
+    $get_question_solution_details = $this->Question_solution_model->get_question_solution_details($data);
+
+    $description = 'No Question Solution Found.';
+    $this->return = false;
+    $this->data = [];
+
+    if ($get_question_solution_details != null) {
+      $description = 'Question Solution Details Fetched.';
+
+      $this->return = true;
+      $this->data = (array) $get_question_solution_details;
+    }
+
+    $this->status_header = 200;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'OK';
+    $this->description = $description;
+
+    return $this->response();
+  }
+
+  public function get_question_solutions($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // CHECK QUESTION SOLUTIONS NOT EXIST
+    $get_question_solutions = $this->Question_solution_model->get_question_solutions($data);
+
+    $description = 'No Question Solutions Found.';
+    $this->return = false;
+    $this->data = [];
+
+    if ($get_question_solutions != null) {
+      $description = 'Question Solutions Fetched.';
+
+      $this->return = true;
+      $this->data = (array) $get_question_solutions;
+    }
+
+    $this->status_header = 200;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'OK';
+    $this->description = $description;
+
+    return $this->response();
+  }
+
+  public function insert_question_solution($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // INSERT QUESTION
+    $insert_question_solution = $this->Question_solution_model->insert_question_solution($data);
+
+    if (!$insert_question_solution) {
+      // failed to insert question solution
+      $this->status_header = 500;
+      $this->output->set_status_header($this->status_header);
+
+      $this->status_code = $this->status_header;
+      $this->status = 'failed';
+      $this->message = 'Internal Server Error';
+      $this->description = 'Failed to insert question solution, please contact the support and try again later.';
+      $this->data = [];
+
+      $this->return = false;
+      return $this->response();
+    }
+
+    $this->status_header = 201;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'Created';
+    $this->description = 'Question Solution Created.';
+    $this->data = [
+      'question_solution_id' => $this->db->insert_id(),
+      'question_solution_title' => $data['solution_title'],
+      'question_solution_description' => $data['solution_description']
+    ];
+
+    $this->return = true;
+    return $this->response();
+  }
+
+  // QUESTION SOLUTION STEP
+  public function get_question_solution_step_details($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // CHECK QUESTION SOLUTION NOT EXIST
+    $get_question_solution_step_details = $this->Question_solution_step_model->get_question_solution_step_details($data);
+
+    $description = 'No Question Solution Step Found.';
+    $this->return = false;
+    $this->data = [];
+
+    if ($get_question_solution_step_details != null) {
+      $description = 'Question Solution Step Details Fetched.';
+
+      $this->return = true;
+      $this->data = (array) $get_question_solution_step_details;
+    }
+
+    $this->status_header = 200;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'OK';
+    $this->description = $description;
+
+    return $this->response();
+  }
+
+  public function get_question_solution_steps($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // CHECK QUESTION SOLUTIONS NOT EXIST
+    $get_question_solution_steps = $this->Question_solution_step_model->get_question_solution_steps($data);
+
+    $description = 'No Question Solution Steps Found.';
+    $this->return = false;
+    $this->data = [];
+
+    if ($get_question_solution_steps != null) {
+      $description = 'Question Solutions Fetched.';
+
+      $this->return = true;
+      $this->data = (array) $get_question_solution_steps;
+    }
+
+    $this->status_header = 200;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'OK';
+    $this->description = $description;
+
+    return $this->response();
+  }
+
+  public function insert_question_solution_step($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // INSERT QUESTION
+    $insert_question_solution_step = $this->Question_solution_step_model->insert_question_solution_step($data);
+
+    if (!$insert_question_solution_step) {
+      // failed to insert question solution step
+      $this->status_header = 500;
+      $this->output->set_status_header($this->status_header);
+
+      $this->status_code = $this->status_header;
+      $this->status = 'failed';
+      $this->message = 'Internal Server Error';
+      $this->description = 'Failed to insert question solution step, please contact the support and try again later.';
+      $this->data = [];
+
+      $this->return = false;
+      return $this->response();
+    }
+
+    $this->status_header = 201;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'Created';
+    $this->description = 'Question Solution Created.';
+    $this->data = [
+      'question_solution_step_id' => $this->db->insert_id(),
+      'question_solution_step_title' => $data['step_title'],
+      'question_solution_step_description' => $data['step_description']
+    ];
+
+    $this->return = true;
+    return $this->response();
+  }
+
+  // QUESTION TAG MAPPING
+  public function get_question_tag_mapping_details($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // CHECK QUESTION TAG MAPPING NOT EXIST
+    $get_question_tag_mapping_details = $this->Question_tag_mapping_model->get_question_tag_mapping_details($data);
+
+    $description = 'No Question Tag Mapping Found.';
+    $this->return = false;
+    $this->data = [];
+
+    if ($get_question_tag_mapping_details != null) {
+      $description = 'Question Tag Mapping Details Fetched.';
+
+      $this->return = true;
+      $this->data = (array) $get_question_tag_mapping_details;
+    }
+
+    $this->status_header = 200;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'OK';
+    $this->description = $description;
+
+    return $this->response();
+  }
+
+  public function get_question_tag_mappings($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // CHECK QUESTION TAG MAPPINGS NOT EXIST
+    $get_question_tag_mappings = $this->Question_tag_mapping_model->get_question_tag_mappings($data);
+
+    $description = 'No Question Tag Mappings Found.';
+    $this->return = false;
+    $this->data = [];
+
+    if ($get_question_tag_mappings != null) {
+      $description = 'Question Tag Mappings Fetched.';
+
+      $this->return = true;
+      $this->data = (array) $get_question_tag_mappings;
+    }
+
+    $this->status_header = 200;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'OK';
+    $this->description = $description;
+
+    return $this->response();
+  }
+
+  public function insert_question_tag_mapping($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // INSERT QUESTION TAG MAPPING
+    $insert_question_tag_mapping = $this->Question_tag_mapping_model->insert_question_tag_mapping($data);
+
+    if (!$insert_question_tag_mapping) {
+      // failed to insert question tag mapping
+      $this->status_header = 500;
+      $this->output->set_status_header($this->status_header);
+
+      $this->status_code = $this->status_header;
+      $this->status = 'failed';
+      $this->message = 'Internal Server Error';
+      $this->description = 'Failed to insert question tag mapping, please contact the support and try again later.';
+      $this->data = [];
+
+      $this->return = false;
+      return $this->response();
+    }
+
+    $this->status_header = 201;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'Created';
+    $this->description = 'Question Tag Mapping Created.';
+    $this->data = [
+      'question_tag_mapping_id' => $this->db->insert_id(),
+      'question_id' => $data['question_id'],
+      'tag_id' => $data['tag_id']
     ];
 
     $this->return = true;

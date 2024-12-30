@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Question_tag_mapping_model extends CI_Model
 {
-	private $table_name = 'questions';
+	private $table_name = 'question_tags_mapping';
 
 	public function __construct()
 	{

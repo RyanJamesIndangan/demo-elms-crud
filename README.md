@@ -28,6 +28,7 @@ Code Repository Platform: GitHub
 3.) I kind of deviated a bit to retain my coding style preferences, but definitely neat, easy to understand and implement.
 4.) The database I designed and developed is highly scalable, meaning we can diverse from whatever spaghetti I build hahaha.
 5.) Mostly I used TEXT so that you can try whatever, usually I use VARCHAR and limit it by 2s.. 2,4,8,16 and so on until 2048, cause if the column can be higher than that, I will just use TEXT instead
+6.) Assuming there are images existing already, instead of uploading the images as attachment, since there's a comment in this link (https://cooing-bladder-b5b.notion.site/Sample-Question-Template-in-JSON-1582c74459628064b455eb89722bdae3) saying "This is just a sample if we want to add a image in a question, just put any public url for me access it and fetch it in the game" -Novi Rañoja
 
 # Future Updates When Hired 👀
 1.) Robust Validations - For Example: Checks for same question, accepts only 1 correct answer, checks image url if existing and a lot lot more.

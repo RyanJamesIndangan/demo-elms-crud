@@ -380,6 +380,8 @@ class Api extends CI_Controller
 	private function create_question($data)
 	{
 		if(isset($data) && !empty($data)) {
+			$user_id = $data['user_id'];
+
 			// assuming there's already validation for difficulty_id, tags_id and category_id
 			// insert the question
 			$params = [
@@ -387,16 +389,90 @@ class Api extends CI_Controller
 				'question' => $data['question_details']['question'],
 				'difficulty_id' => $data['question_details']['question_other_details']['difficulty_id'],
 				'category_id' => $data['question_details']['question_other_details']['category_id'],
-				'question_images' =>  json_encode($data['question_details']['question_images'])
+				'question_images' =>  json_encode($data['question_details']['question_images']),
+				'modified_by' => $user_id,
+				'date_modified' => $this->date_now,
+				'created_by' => $user_id,
+				'date_created' => $this->date_now
 			];
 	
 			$insert_question = $this->Api_model->insert_question($params);
 
 			if($insert_question['return']) {
 				// Map the solutions
-				// Map the solution steps
+				foreach($data['solutions'] as $solution) {
+					$params = [
+						'question_id' => $insert_question['data']['question_id'],
+						'solution_title' => $solution['solution_title'],
+						'solution_description' => $solution['solution_description'],
+						'solution_sequence' => $solution['solution_sequence'],
+						'solution_images' => json_encode($solution['solution_images']),
+						'modified_by' => $user_id,
+						'date_modified' => $this->date_now,
+						'created_by' => $user_id,
+						'date_created' => $this->date_now
+					];
+					$insert_question_solution = $this->Api_model->insert_question_solution($params);
+
+					if($insert_question_solution['return']) {
+						// Map the solution steps
+						foreach($solution['solution_steps'] as $solution_step) {
+							$params = [
+								'solution_id' => $insert_question_solution['data']['question_solution_id'],
+								'step_title' => $solution_step['step_title'],
+								'step_description' => $solution_step['step_description'],
+								'step_sequence' => $solution_step['step_sequence'],
+								'step_images' => json_encode($solution_step['step_images']),
+								'modified_by' => $user_id,
+								'date_modified' => $this->date_now,
+								'created_by' => $user_id,
+								'date_created' => $this->date_now
+							];
+
+							$insert_question_solution_step = $this->Api_model->insert_question_solution_step($params);
+						}
+					}
+				}
+
 				// Map the tags
+				foreach($data['question_details']['question_other_details']['tags'] as $tags) {
+					$params = [
+						'question_id' => $insert_question['data']['question_id'],
+						'tag_id' => $tags['tag_id'],
+						'modified_by' => $user_id,
+						'date_modified' => $this->date_now,
+						'created_by' => $user_id,
+						'date_created' => $this->date_now
+					];
+
+					$insert_question_tags_mapping = $this->Api_model->insert_question_tag_mapping($params);
+				}
+
 				// Map the answers
+				foreach($data['answer_options'] as $answer_options) {
+					$params = [
+						'question_id' => $insert_question['data']['question_id'],
+						'answer' => $answer_options['answer'],
+						'is_correct_answer' => $answer_options['is_correct_answer'],
+						'answer_images' => json_encode($answer_options['answer_images']),
+						'modified_by' => $user_id,
+						'date_modified' => $this->date_now,
+						'created_by' => $user_id,
+						'date_created' => $this->date_now
+					];
+
+					$insert_question_answer = $this->Api_model->insert_question_answer($params);
+				}
+
+				$this->status_header = 201;
+				$this->output->set_status_header($this->status_header);
+		
+				$this->status_code = $this->status_header;
+				$this->status = 'success';
+				$this->message = 'Created';
+				$this->description = 'Question Created.';
+
+				$this->output->set_output(json_encode($this->response()));
 			}
 		} else {
 			$this->status_header = 400;
