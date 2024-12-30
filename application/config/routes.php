@@ -60,6 +60,12 @@ $route['api/generate-token'] = 'api/generate_token';
 // MISCELLANEOUS
 $route['api/get-endpoints'] = 'api/get_endpoints';
 $route['api/check-endpoint-required-data'] = 'api/check_endpoint_required_data';
+
+// QUESTIONS
+$route['api/questions'] = 'api/questions';
+$route['api/questions/(:any)'] = 'api/questions/$1';
+
+
   
   
 

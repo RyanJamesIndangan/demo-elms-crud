@@ -309,18 +309,23 @@ class Api extends CI_Controller
 
 				$reflection = new ReflectionClass($controller_name);
 
-				$public_methods = array();
-				foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-					$method_name = $method->getName();
+				// $public_methods = array();
+				// foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+				// 	$method_name = $method->getName();
 
-					if (!in_array($method_name, ['__construct', 'get_instance'])) {
-						$public_methods[] = $method_name;
-					}
-				}
+				// 	if (!in_array($method_name, ['__construct', 'get_instance'])) {
+				// 		$public_methods[] = $method_name;
+				// 	}
+				// }
 
-				sort($public_methods);
+				// sort($public_methods);
 
-				$response['endpoints'] = $public_methods;
+				// $response['endpoints'] = $public_methods;
+				$response['endpoints'] = [
+					'check_endpoint_required_data',
+					'generate_token',
+					'get_endpoints',
+				];
 
 				$this->status_header = 200;
 				$this->output->set_status_header($this->status_header);
@@ -336,6 +341,44 @@ class Api extends CI_Controller
 				$this->output->set_output(json_encode($this->response_model($get_user_details)));
 			}
 		}
+	}
+	// -------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	// -------------------------------------------------------------------------------------------------------------------------------------------------------
+	public function questions($data = null)
+	{
+		$method = $this->input->server('REQUEST_METHOD');
+
+		switch ($method) {
+				case 'GET':
+						echo 'GET';
+						break;
+				
+				case 'POST':
+					$this->create_question($data);
+					break;
+
+				case 'PUT':
+						echo 'PUT';
+						break;
+				
+				case 'PATCH':
+					echo 'PATCH';
+					break;
+
+				case 'DELETE':
+					echo 'DELETE';
+						break;
+
+				default:
+						echo 'Method Not Allowed';
+						break;
+		}
+	}
+
+	private function create_question($data)
+	{
+		echo 'hi '.$data;
 	}
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------
 } // CLASS CLOSING
