@@ -497,7 +497,7 @@ class Api extends CI_Controller
 
 			$get_question_details = $this->Api_model->get_question_details($params);
 
-			$get_question_details['data']['title'] = stripslashes($get_question_details['data']['title']);
+			$get_question_details['data']['title'] = stripslashes($get_question_details['data']['question_title']);
 			$get_question_details['data']['question'] = stripslashes($get_question_details['data']['question']);
 			$get_question_details['data']['question_images'] = json_decode(stripslashes($get_question_details['data']['question_images']), true);
 
@@ -512,7 +512,7 @@ class Api extends CI_Controller
 			foreach($get_questions['data'] as &$questions) {
 				$questions = (array) $questions;
 
-				$questions['title'] = stripslashes($questions['title']);
+				$questions['title'] = stripslashes($questions['question_title']);
 				$questions['question'] = stripslashes($questions['question']);
 				$questions['question_images'] = json_decode(stripslashes($questions['question_images']), true);
 			}
