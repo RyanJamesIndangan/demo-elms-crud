@@ -33,6 +33,7 @@ class Api_Model extends CI_Model
 
     $this->load->model('Category_model');
     $this->load->model('Difficulty_model');
+    $this->load->model('Question_answer_model');
     $this->load->model('Question_model');
     $this->load->model('Question_solution_model');
     $this->load->model('Question_solution_step_model');
