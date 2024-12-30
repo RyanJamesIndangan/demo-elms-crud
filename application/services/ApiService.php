@@ -16,44 +16,62 @@ class ApiService
 
     switch ($_ENV['APP_ENV']) {
       case 'development':
-          // Key for encryption (must be the same on both ends)
-          $this->secret_key = $_ENV['DEVELOPMENT_SECRET_KEY'];
-          $this->caller_base_url = $_ENV['DEVELOPMENT_CALLER_BASE_URL'];
+        // Key for encryption (must be the same on both ends)
+        $this->secret_key = $_ENV['DEVELOPMENT_SECRET_KEY'];
+        $this->caller_base_url = $_ENV['DEVELOPMENT_CALLER_BASE_URL'];
 
-          // Credentials for API Platforms
-          $this->username = $_ENV['DEVELOPMENT_USERNAME'];
-          $this->password = $_ENV['DEVELOPMENT_PASSWORD'];
-          break;
-  
+        // Credentials for API Platforms
+        $this->username = $_ENV['DEVELOPMENT_USERNAME'];
+        $this->password = $_ENV['DEVELOPMENT_PASSWORD'];
+        break;
+
+      case 'local':
+        // Key for encryption (must be the same on both ends)
+        $this->secret_key = $_ENV['LOCAL_SECRET_KEY'];
+        $this->caller_base_url = $_ENV['LOCAL_CALLER_BASE_URL'];
+
+        // Credentials for API Platforms
+        $this->username = $_ENV['LOCAL_USERNAME'];
+        $this->password = $_ENV['LOCAL_PASSWORD'];
+        break;
+
+      case 'live':
+        $this->secret_key = $_ENV['LIVE_SECRET_KEY'];
+        $this->caller_base_url = $_ENV['LIVE_CALLER_BASE_URL'];
+
+        $this->username = $_ENV['LIVE_USERNAME'];
+        $this->password = $_ENV['LIVE_PASSWORD'];
+        break;
+
       case 'staging':
-          $this->secret_key = $_ENV['STAGING_SECRET_KEY'];
-          $this->caller_base_url = $_ENV['STAGING_CALLER_BASE_URL'];
+        $this->secret_key = $_ENV['STAGING_SECRET_KEY'];
+        $this->caller_base_url = $_ENV['STAGING_CALLER_BASE_URL'];
 
-          $this->username = $_ENV['STAGING_USERNAME'];
-          $this->password = $_ENV['STAGING_PASSWORD'];
-          break;
-  
+        $this->username = $_ENV['STAGING_USERNAME'];
+        $this->password = $_ENV['STAGING_PASSWORD'];
+        break;
+
       case 'uat':
-          $this->secret_key = $_ENV['UAT_SECRET_KEY'];
-          $this->caller_base_url = $_ENV['UAT_CALLER_BASE_URL'];
+        $this->secret_key = $_ENV['UAT_SECRET_KEY'];
+        $this->caller_base_url = $_ENV['UAT_CALLER_BASE_URL'];
 
-          $this->username = $_ENV['UAT_USERNAME'];
-          $this->password = $_ENV['UAT_PASSWORD'];
-          break;
-  
+        $this->username = $_ENV['UAT_USERNAME'];
+        $this->password = $_ENV['UAT_PASSWORD'];
+        break;
+
       case 'production':
-          $this->secret_key = $_ENV['PRODUCTION_SECRET_KEY'];
-          $this->caller_base_url = $_ENV['PRODUCTION_CALLER_BASE_URL'];
+        $this->secret_key = $_ENV['PRODUCTION_SECRET_KEY'];
+        $this->caller_base_url = $_ENV['PRODUCTION_CALLER_BASE_URL'];
 
-          $this->username = $_ENV['PRODUCTION_USERNAME'];
-          $this->password = $_ENV['PRODUCTION_PASSWORD'];
-          break;
+        $this->username = $_ENV['PRODUCTION_USERNAME'];
+        $this->password = $_ENV['PRODUCTION_PASSWORD'];
+        break;
     }
   }
 
   private function generate_token()
   {
-    $subject = 'External Call From '.$_ENV['APP_NAME'];
+    $subject = 'External Call From ' . $_ENV['APP_NAME'];
     $date_created = time();
     $expiration_date = strtotime($_ENV['TOKEN_EXPIRATION']);
 
