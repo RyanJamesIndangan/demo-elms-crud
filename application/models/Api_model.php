@@ -31,6 +31,13 @@ class Api_Model extends CI_Model
       'data' =>  $this->data
     ];
 
+    $this->load->model('Category_model');
+    $this->load->model('Difficulty_model');
+    $this->load->model('Question_model');
+    $this->load->model('Question_solution_model');
+    $this->load->model('Question_solution_step_model');
+    $this->load->model('Question_tag_mapping_model');
+    $this->load->model('Tag_model');
     $this->load->model('User_model');
     $this->load->model('User_type_model');
   }
