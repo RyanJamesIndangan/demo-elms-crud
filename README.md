@@ -34,4 +34,4 @@ Code Repository Platform: GitHub
 2.) Build them into a game or examination - since this is just for questions only, we can map it and hone it into a game (compilation of questions to make a game/exam/test/trial).
 3.) Will follow the team's preferred coding convention - I prefer to use snake_case, but I will adapt to any coding standard that the team have.
 4.) Solid audit trailing - notifications, account history etc and what not.
-5.) Some calls me "10x Developer" some says "Unicorn Developer" but maybe I'm just some regular everyday developer, who knows? (Please Hire Me lmao 🙏🙏🙏, I work smarter and harder than most 🙇🙇🙇).
+5.) Some calls me "10x Developer" some says "Unicorn Developer" but maybe I'm just some regular everyday developer, who knows? (Please Hire Me lmao 🙏🙏🙏, I work smarter and harder than most 🙇🙇🙇, I'm a fun guy, you don't want another stressful colleague don't you? Hehe 😆✌️).
