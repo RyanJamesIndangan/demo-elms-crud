@@ -8,7 +8,6 @@ Smart Nonsense - Trial Task
 3.) Import the postman file for local
 4.) Enjoy
 
-
 <!-- Live -->
 1.) Composer Install
 2.) Cofigure the .env
@@ -17,3 +16,4 @@ Smart Nonsense - Trial Task
 
 # Notes
 1.) Make sure to have Composer, PHP 7.4+ and MySQL 5.7+ installed in your server.
+2.) I copied your 404 page, please don't be mad hehe
