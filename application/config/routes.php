@@ -57,6 +57,9 @@ $route['default_controller'] = 'api';
 // AUTHENTICATION
 $route['api/generate-token'] = 'api/generate_token';
 
+// MISCELLANEOUS
+$route['api/get-endpoints'] = 'api/get_endpoints';
+$route['api/check-endpoint-required-data'] = 'api/check_endpoint_required_data';
   
   
 
