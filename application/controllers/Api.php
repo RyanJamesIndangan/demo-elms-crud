@@ -345,17 +345,18 @@ class Api extends CI_Controller
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------
-	public function questions($data = null)
+	public function questions($id = null)
 	{
 		$method = $this->input->server('REQUEST_METHOD');
 
 		switch ($method) {
 				case 'GET':
-						echo 'GET';
+						$this->get_question_by_id($id);
 						break;
 				
 				case 'POST':
-					$this->create_question($data);
+					$data = json_decode(file_get_contents('php://input'), true);
+					$this->create_question($data['data']);
 					break;
 
 				case 'PUT':
@@ -378,7 +379,54 @@ class Api extends CI_Controller
 
 	private function create_question($data)
 	{
-		echo 'hi '.$data;
+		if(isset($data) && !empty($data)) {
+			// assuming there's already validation for difficulty_id, tags_id and category_id
+			// insert the question
+			$params = [
+				'question_title' => $data['question_details']['question_title'],
+				'question' => $data['question_details']['question'],
+				'difficulty_id' => $data['question_details']['question_other_details']['difficulty_id'],
+				'category_id' => $data['question_details']['question_other_details']['category_id'],
+				'question_images' =>  json_encode($data['question_details']['question_images'])
+			];
+	
+			$insert_question = $this->Api_model->insert_question($params);
+
+			if($insert_question['return']) {
+				// Map the solutions
+				// Map the solution steps
+				// Map the tags
+				// Map the answers
+			}
+		} else {
+			$this->status_header = 400;
+			$this->output->set_status_header($this->status_header);
+			$this->status_code = $this->status_header;
+			$this->status = 'failed';
+			$this->message = 'Bad Request';
+			$this->description = 'Failed to create question, data must be set and not empty.';
+
+			$this->output->set_output(json_encode($this->response()));
+		}
+	}
+
+	private function get_question_by_id($id) // UNTESTED
+	{
+		// No Solid Validation like a boss, just kidding, this is demo come on now, please have mercy, it's just a demo.
+		$params = [
+			'id' => $id
+		];
+
+		if(isset($id) && !empty($id)) {
+
+			$get_question_details = $this->Api_model->get_question_details($params);
+
+			$this->output->set_output(json_encode($this->response_model($get_question_details)));
+		} else {
+			$get_questions = $this->Api_model->get_questions($params);
+
+			$this->output->set_output(json_encode($this->response_model($get_questions)));
+		}
 	}
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------
 } // CLASS CLOSING

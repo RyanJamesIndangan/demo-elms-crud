@@ -156,7 +156,7 @@ class Api_Model extends CI_Model
     $data = $this->sanitationService->sanitize($data);
 
     // CHECK USER TYPE NOT EXIST
-    $get_user_types = $this->User_type_model->get_networks($data);
+    $get_user_types = $this->User_type_model->get_user_types($data);
 
     $description = 'No User Types Found.';
     $this->return = false;
@@ -177,6 +177,104 @@ class Api_Model extends CI_Model
     $this->message = 'OK';
     $this->description = $description;
 
+    return $this->response();
+  }
+
+  // QUESTIONS
+  public function get_question_details($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // CHECK QUESTION NOT EXIST
+    $get_question_details = $this->Question_model->get_question_details($data);
+
+    $description = 'No Question Found.';
+    $this->return = false;
+    $this->data = [];
+
+    if ($get_question_details != null) {
+      $description = 'Question Details Fetched.';
+
+      $this->return = true;
+      $this->data = (array) $get_question_details;
+    }
+
+    $this->status_header = 200;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'OK';
+    $this->description = $description;
+
+    return $this->response();
+  }
+
+  public function get_questions($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // CHECK QUESTIONS NOT EXIST
+    $get_questions = $this->Question_model->get_questions($data);
+
+    $description = 'No Questions Found.';
+    $this->return = false;
+    $this->data = [];
+
+    if ($get_questions != null) {
+      $description = 'Questions Fetched.';
+
+      $this->return = true;
+      $this->data = (array) $get_questions;
+    }
+
+    $this->status_header = 200;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'OK';
+    $this->description = $description;
+
+    return $this->response();
+  }
+
+  public function insert_question($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // INSERT QUESTION
+    $insert_question = $this->Question_model->insert_question($data);
+
+    if (!$insert_question) {
+      // failed to insert question
+      $this->status_header = 500;
+      $this->output->set_status_header($this->status_header);
+
+      $this->status_code = $this->status_header;
+      $this->status = 'failed';
+      $this->message = 'Internal Server Error';
+      $this->description = 'Failed to insert question, please contact the support and try again later.';
+      $this->data = [];
+
+      $this->return = false;
+      return $this->response();
+    }
+
+    $this->status_header = 201;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'Created';
+    $this->description = 'Question Created.';
+    $this->data = [
+      'question_id' => $this->db->insert_id(),
+      'question_title' => $data['question_title'],
+      'question' => $data['question'],
+    ];
+
+    $this->return = true;
     return $this->response();
   }
 } // CLASS CLOSING
