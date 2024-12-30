@@ -489,17 +489,33 @@ class Api extends CI_Controller
 	private function get_question_by_id($id) // UNTESTED
 	{
 		// No Solid Validation like a boss, just kidding, this is demo come on now, please have mercy, it's just a demo.
-		$params = [
-			'id' => $id
-		];
-
 		if(isset($id) && !empty($id)) {
+
+			$params = [
+				'id' => $id
+			];
 
 			$get_question_details = $this->Api_model->get_question_details($params);
 
+			$get_question_details['data']['title'] = stripslashes($get_question_details['data']['title']);
+			$get_question_details['data']['question'] = stripslashes($get_question_details['data']['question']);
+			$get_question_details['data']['question_images'] = json_decode(stripslashes($get_question_details['data']['question_images']), true);
+
 			$this->output->set_output(json_encode($this->response_model($get_question_details)));
 		} else {
+			$params = [
+				'state' => 'ACTIVE'
+			];
+
 			$get_questions = $this->Api_model->get_questions($params);
+
+			foreach($get_questions['data'] as &$questions) {
+				$questions = (array) $questions;
+
+				$questions['title'] = stripslashes($questions['title']);
+				$questions['question'] = stripslashes($questions['question']);
+				$questions['question_images'] = json_decode(stripslashes($questions['question_images']), true);
+			}
 
 			$this->output->set_output(json_encode($this->response_model($get_questions)));
 		}

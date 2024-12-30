@@ -14,13 +14,24 @@ Code Repository Platform: GitHub
 1.) Composer Install.
 2.) Cofigure the .env.
 3.) Import the postman file for local.
-4.) Enjoy.
+4.) Import the SQL File.
+5.) In your postman, configure the variables.
+6.) Go to "API Auth" and trigger the "generate-token".
+7.) Copy the token value and paste it in your variable token for initial and current value.
+8.) You can check the miscellaneous but I decided not to implement it since it might take up some time to develop every .single validation and requirements for data insertion.
+9.) Go to Question Folder and trigger the POST question.
+10.) Enjoy!
 
 <!-- Live -->
 1.) Composer Install.
 2.) Cofigure the .env.
 3.) Import the postman file for live.
-4.) Enjoy.
+4.) In your postman, configure the variables.
+5.) Go to "API Auth" and trigger the "generate-token".
+6.) Copy the token value and paste it in your variable token for initial and current value.
+7.) You can check the miscellaneous but I decided not to implement it since it might take up some time to develop every .single validation and requirements for data insertion.
+8.) Go to Question Folder and trigger the POST question.
+9.) Enjoy!
 
 # Notes
 1.) Make sure to have Composer, PHP 7.4+ and MySQL 5.7+ installed in your server.
