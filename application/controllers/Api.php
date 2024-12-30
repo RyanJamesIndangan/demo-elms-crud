@@ -297,9 +297,13 @@ class Api extends CI_Controller
 
 			$user_id = $data['data']['user_id'];
 
-			$check_user_exist = $this->Api_model->check_user_exist(null, null, $user_id);
+			$params = [
+				'id' => $user_id
+			];
 
-			if ($check_user_exist['return']) {
+			$get_user_details = $this->Api_model->get_user_details($params);
+
+			if ($get_user_details['return']) {
 
 				$controller_name = get_class($this);
 
@@ -329,7 +333,7 @@ class Api extends CI_Controller
 				$this->output->set_output(json_encode($this->response()));
 			} else {
 				// "User does not exist." description in Api_model
-				$this->output->set_output(json_encode($this->response_model($check_user_exist)));
+				$this->output->set_output(json_encode($this->response_model($get_user_details)));
 			}
 		}
 	}
