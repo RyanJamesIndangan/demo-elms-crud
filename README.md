@@ -1,6 +1,14 @@
 # Repository Name: demo-elms-crud
 Smart Nonsense - Trial Task
 
+# Tech Details
+Database Collation: utf8_mb4_general_ci
+Back-End Language, Version and Framework: CodeIgniter 3.1+ PHP 7.4+ (will not work properly on PHP 8+)
+MySQL Version: 5.7+ (might have some problems with MySQL 8+)
+API Platform: PostMan
+Version Control system: Git
+Code Repository Platform: GitHub
+
 # How to run this code?
 <!-- Local -->
 1.) Composer Install.
@@ -19,6 +27,7 @@ Smart Nonsense - Trial Task
 2.) I copied your 404 page, please don't be mad hehe.
 3.) I kind of deviated a bit to retain my coding style preferences, but definitely neat, easy to understand and implement.
 4.) The database I designed and developed is highly scalable, meaning we can diverse from whatever spaghetti I build hahaha.
+5.) Mostly I used TEXT so that you can try whatever, usually I use VARCHAR and limit it by 2s.. 2,4,8,16 and so on until 2048, cause if the column can be higher than that, I will just use TEXT instead
 
 # Future Updates When Hired 👀
 1.) Robust Validations - For Example: Checks for same question, accepts only 1 correct answer, checks image url if existing and a lot lot more.
