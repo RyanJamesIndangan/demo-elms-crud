@@ -350,36 +350,36 @@ class Api extends CI_Controller
 		$method = $this->input->server('REQUEST_METHOD');
 
 		switch ($method) {
-				case 'GET':
-						$this->get_questions($id);
-						break;
-				
-				case 'POST':
-					$data = json_decode(file_get_contents('php://input'), true);
-					$this->create_question($data['data']);
-					break;
+			case 'GET':
+				$this->get_questions($id);
+				break;
 
-				case 'PUT':
-						echo 'PUT';
-						break;
-				
-				case 'PATCH':
-					echo 'PATCH';
-					break;
+			case 'POST':
+				$data = json_decode(file_get_contents('php://input'), true);
+				$this->create_question($data['data']);
+				break;
 
-				case 'DELETE':
-					echo 'DELETE';
-						break;
+			case 'PUT':
+				echo 'PUT';
+				break;
 
-				default:
-						echo 'Method Not Allowed';
-						break;
+			case 'PATCH':
+				echo 'PATCH';
+				break;
+
+			case 'DELETE':
+				echo 'DELETE';
+				break;
+
+			default:
+				echo 'Method Not Allowed';
+				break;
 		}
 	}
 
 	private function create_question($data)
 	{
-		if(isset($data) && !empty($data)) {
+		if (isset($data) && !empty($data)) {
 			$user_id = $data['user_id'];
 
 			// assuming there's already validation for difficulty_id, tags_id and category_id
@@ -395,12 +395,12 @@ class Api extends CI_Controller
 				'created_by' => $user_id,
 				'date_created' => $this->date_now
 			];
-	
+
 			$insert_question = $this->Api_model->insert_question($params);
 
-			if($insert_question['return']) {
+			if ($insert_question['return']) {
 				// Map the solutions
-				foreach($data['solutions'] as $solution) {
+				foreach ($data['solutions'] as $solution) {
 					$params = [
 						'question_id' => $insert_question['data']['question_id'],
 						'solution_title' => $solution['solution_title'],
@@ -414,9 +414,9 @@ class Api extends CI_Controller
 					];
 					$insert_question_solution = $this->Api_model->insert_question_solution($params);
 
-					if($insert_question_solution['return']) {
+					if ($insert_question_solution['return']) {
 						// Map the solution steps
-						foreach($solution['solution_steps'] as $solution_step) {
+						foreach ($solution['solution_steps'] as $solution_step) {
 							$params = [
 								'solution_id' => $insert_question_solution['data']['question_solution_id'],
 								'step_title' => $solution_step['step_title'],
@@ -436,7 +436,7 @@ class Api extends CI_Controller
 				}
 
 				// Map the tags
-				foreach($data['question_details']['question_other_details']['tags'] as $tags) {
+				foreach ($data['question_details']['question_other_details']['tags'] as $tags) {
 					$params = [
 						'question_id' => $insert_question['data']['question_id'],
 						'tag_id' => $tags['tag_id'],
@@ -450,7 +450,7 @@ class Api extends CI_Controller
 				}
 
 				// Map the answers
-				foreach($data['answer_options'] as $answer_options) {
+				foreach ($data['answer_options'] as $answer_options) {
 					$params = [
 						'question_id' => $insert_question['data']['question_id'],
 						'answer' => $answer_options['answer'],
@@ -467,7 +467,7 @@ class Api extends CI_Controller
 
 				$this->status_header = 201;
 				$this->output->set_status_header($this->status_header);
-		
+
 				$this->status_code = $this->status_header;
 				$this->status = 'success';
 				$this->message = 'Created';
@@ -490,7 +490,7 @@ class Api extends CI_Controller
 	private function get_questions($id)
 	{
 		// No Solid Validation like a boss, just kidding, this is demo come on now, please have mercy, it's just a demo.
-		if(isset($id) && !empty($id)) {
+		if (isset($id) && !empty($id)) {
 			$this->get_question_by_id($id);
 		} else {
 			$this->get_questions_all();
@@ -519,7 +519,7 @@ class Api extends CI_Controller
 
 		$get_solution_details = $this->Api_model->get_question_solution_details($params);
 
-		if($get_solution_details['return']) {
+		if ($get_solution_details['return']) {
 			$get_solution_details['data']['solution_title'] = stripslashes($get_solution_details['data']['solution_title']);
 			$get_solution_details['data']['solution_description'] = stripslashes($get_solution_details['data']['solution_description']);
 			$get_solution_details['data']['solution_images'] = json_decode(stripslashes($get_solution_details['data']['solution_images']), true);
@@ -532,8 +532,8 @@ class Api extends CI_Controller
 			];
 
 			$get_solution_steps = $this->Api_model->get_question_solution_steps($params);
-			
-			foreach($get_solution_steps['data'] as &$solution_steps) {
+
+			foreach ($get_solution_steps['data'] as &$solution_steps) {
 				$solution_steps = (array) $solution_steps;
 
 				$solution_steps['step_title'] = stripslashes($solution_steps['step_title']);
@@ -559,14 +559,14 @@ class Api extends CI_Controller
 
 			$get_question_answers = $this->Api_model->get_question_answers($params);
 
-			if($get_question_answers['return']) {
-				foreach($get_question_answers['data'] as &$question_answers) {
+			if ($get_question_answers['return']) {
+				foreach ($get_question_answers['data'] as &$question_answers) {
 					$question_answers = (array) $question_answers;
 
 					$question_answers['answer'] = stripslashes($question_answers['answer']);
 					$question_answers['answer_images'] = json_decode(stripslashes($question_answers['answer_images']), true);
 
-					if($question_answers['is_correct_answer'] == 'true') {
+					if ($question_answers['is_correct_answer'] == 'true') {
 						$correct_answer = $question_answers['answer'];
 					}
 
@@ -574,20 +574,20 @@ class Api extends CI_Controller
 						'answer' => $question_answers['answer']
 					];
 				}
-			
-			// $get_solution_details['data']['solution_steps'] = $get_solution_steps;
-			$get_solution_details['data']['Steps'] = $get_solution_steps;
-			$response = [
-				'Question' => $get_question_details['data']['question'],
-				'Solution' => $get_solution_details['data']['solution_description'],
-				'CorrectAnswer' => $correct_answer,
-				'Options' => $options,
-				'Steps' => $steps,
-				'ImageUrl' => $get_question_details['data']['question_images']
-			];
-			
 
-			// $get_question_details['data']['solution'] = $get_solution_details['data'];
+				// $get_solution_details['data']['solution_steps'] = $get_solution_steps;
+				$get_solution_details['data']['Steps'] = $get_solution_steps;
+				$response = [
+					'Question' => $get_question_details['data']['question'],
+					'Solution' => $get_solution_details['data']['solution_description'],
+					'CorrectAnswer' => $correct_answer,
+					'Options' => $options,
+					'Steps' => $steps,
+					'ImageUrl' => $get_question_details['data']['question_images']
+				];
+
+
+				// $get_question_details['data']['solution'] = $get_solution_details['data'];
 			}
 		}
 
@@ -611,7 +611,7 @@ class Api extends CI_Controller
 		];
 
 		$get_questions = $this->Api_model->get_questions($params);
-		foreach($get_questions['data'] as &$get_questions) {
+		foreach ($get_questions['data'] as &$get_questions) {
 			$get_questions = (array) $get_questions;
 
 			$get_questions['title'] = stripslashes($get_questions['question_title']);
@@ -626,7 +626,7 @@ class Api extends CI_Controller
 
 			$get_solution_details = $this->Api_model->get_question_solution_details($params);
 
-			if($get_solution_details['return']) {
+			if ($get_solution_details['return']) {
 				$get_solution_details['data']['solution_title'] = stripslashes($get_solution_details['data']['solution_title']);
 				$get_solution_details['data']['solution_description'] = stripslashes($get_solution_details['data']['solution_description']);
 				$get_solution_details['data']['solution_images'] = json_decode(stripslashes($get_solution_details['data']['solution_images']), true);
@@ -639,8 +639,8 @@ class Api extends CI_Controller
 				];
 
 				$get_solution_steps = $this->Api_model->get_question_solution_steps($params);
-				
-				foreach($get_solution_steps['data'] as &$solution_steps) {
+
+				foreach ($get_solution_steps['data'] as &$solution_steps) {
 					$solution_steps = (array) $solution_steps;
 
 					$solution_steps['step_title'] = stripslashes($solution_steps['step_title']);
@@ -666,14 +666,14 @@ class Api extends CI_Controller
 
 				$get_question_answers = $this->Api_model->get_question_answers($params);
 
-				if($get_question_answers['return']) {
-					foreach($get_question_answers['data'] as &$question_answers) {
+				if ($get_question_answers['return']) {
+					foreach ($get_question_answers['data'] as &$question_answers) {
 						$question_answers = (array) $question_answers;
 
 						$question_answers['answer'] = stripslashes($question_answers['answer']);
 						$question_answers['answer_images'] = json_decode(stripslashes($question_answers['answer_images']), true);
 
-						if($question_answers['is_correct_answer'] == 'true') {
+						if ($question_answers['is_correct_answer'] == 'true') {
 							$correct_answer = $question_answers['answer'];
 						}
 
@@ -681,7 +681,7 @@ class Api extends CI_Controller
 							'answer' => $question_answers['answer']
 						];
 					}
-				
+
 					$get_solution_details['data']['Steps'] = $get_solution_steps;
 					$response[] = [
 						'Question' => $get_questions['question'],
@@ -704,6 +704,363 @@ class Api extends CI_Controller
 		$this->data = $response;
 
 		$this->output->set_output(json_encode($this->response()));
+	}
+
+	public function questions_v2($id = null)
+	{
+		$method = $this->input->server('REQUEST_METHOD');
+
+		switch ($method) {
+			case 'GET':
+				$this->get_questions_v2($id);
+				break;
+
+			case 'POST':
+				echo 'POST';
+				// $data = json_decode(file_get_contents('php://input'), true);
+				// $this->create_question_v2($data['data']);
+				break;
+
+			case 'PUT':
+				echo 'PUT';
+				break;
+
+			case 'PATCH':
+				echo 'PATCH';
+				break;
+
+			case 'DELETE':
+				echo 'DELETE';
+				break;
+
+			default:
+				echo 'Method Not Allowed';
+				break;
+		}
+	}
+
+	private function get_questions_v2($id)
+	{
+		// No Solid Validation like a boss, just kidding, this is demo come on now, please have mercy, it's just a demo.
+		if (isset($id) && !empty($id)) {
+			$this->get_question_by_id_v2($id);
+		} else {
+			$this->get_questions_all_v2();
+		}
+	}
+
+	private function get_question_by_id_v2($id)
+	{
+		$response = [];
+
+		$question_details = [];
+
+		$params = [
+			'id' => $id
+		];
+
+		$get_question_details = $this->Api_model->get_question_details($params);
+
+		if ($get_question_details['return']) {
+			$get_question_details['data']['title'] = stripslashes($get_question_details['data']['question_title']);
+			$get_question_details['data']['question'] = stripslashes($get_question_details['data']['question']);
+			$get_question_details['data']['question_images'] = json_decode(stripslashes($get_question_details['data']['question_images']), true);
+
+			$question_details = [
+				'question_title' => $get_question_details['data']['question_title'],
+				'question' => $get_question_details['data']['question'],
+			];
+
+			$question_other_details = [];
+
+			// Get Category Details
+			$params = [
+				'id' => $get_question_details['data']['category_id']
+			];
+			$get_category_details = $this->Api_model->get_category_details($params);
+
+			// Get Difficulty Details
+			$params = [
+				'id' => $get_question_details['data']['difficulty_id']
+			];
+			$get_difficulty_details = $this->Api_model->get_difficulty_details($params);
+
+			// Get Question Tags Mapping
+			$params = [
+				'question_id' => $get_question_details['data']['id']
+			];
+			$get_question_tag_mappings = $this->Api_model->get_question_tag_mappings($params);
+
+			if ($get_question_tag_mappings['return']) {
+				foreach ($get_question_tag_mappings['data'] as &$question_tag_mappings) {
+					$question_tag_mappings = (array) $question_tag_mappings;
+
+					// Get Tag Details
+					$params = [
+						'id' => $question_tag_mappings['tag_id'],
+					];
+					$get_tag_details = $this->Api_model->get_tag_details($params);
+					if ($get_tag_details['return']) {
+						$get_tag_details['data']['tag'] = stripslashes($get_tag_details['data']['tag']);
+						$get_tag_details['data']['tag_description'] = stripslashes($get_tag_details['data']['description']);
+						$get_tag_details['data']['tag_remarks'] = stripslashes($get_tag_details['data']['remarks']);
+
+						$question_tag_mappings['tag_details'] = $get_tag_details['data'];
+					} else {
+						$question_tag_mappings['tag_details'] = [];
+					}
+				}
+			}
+			$question_other_details = [
+				'category_details' => (isset($get_category_details['data']) ? $get_category_details['data'] : []),
+				'difficulty_details' => (isset($get_difficulty_details['data']) ? $get_difficulty_details['data'] : []),
+				'tags' => (isset($get_question_tag_mappings['data']) ? $get_question_tag_mappings['data'] : [])
+			];
+
+			$question_details['question_other_details'] = $question_other_details;
+			$question_details['question_images'] = (isset($get_question_details['data']['question_images']) ? $get_question_details['data']['question_images'] : []);
+
+			$response['question_details'] = $question_details;
+
+			$params = [
+				'question_id' => $id
+			];
+
+			$get_solutions = $this->Api_model->get_question_solutions($params);
+
+			if ($get_solutions['return']) {
+				foreach ($get_solutions['data'] as &$get_solutions) {
+
+					$get_solutions = (array) $get_solutions;
+
+					$get_solutions['solution_title'] = stripslashes($get_solutions['solution_title']);
+					$get_solutions['solution_description'] = stripslashes($get_solutions['solution_description']);
+					$get_solutions['solution_images'] = json_decode(stripslashes($get_solutions['solution_images']), true);
+
+					// Get Solution Steps
+					$steps = [];
+
+					$params = [
+						'solution_id' => $get_solutions['id']
+					];
+
+					$get_solution_steps = $this->Api_model->get_question_solution_steps($params);
+
+					foreach ($get_solution_steps['data'] as &$solution_steps) {
+						$solution_steps = (array) $solution_steps;
+
+						$solution_steps['step_title'] = stripslashes($solution_steps['step_title']);
+						$solution_steps['step_description'] = stripslashes($solution_steps['step_description']);
+						$solution_steps['step_result'] = stripslashes($solution_steps['step_result']);
+						$solution_steps['step_images'] = json_decode(stripslashes($solution_steps['step_images']), true);
+
+						$steps[] = [
+							'step_title' => $solution_steps['step_title'],
+							'step_description' => $solution_steps['step_description'],
+							'step_result' => $solution_steps['step_result'],
+							'step_sequence' => $solution_steps['step_result'],
+							'step_images' => $solution_steps['step_images']
+						];
+					}
+
+					$get_solutions['solution_steps'] = $steps;
+				}
+			}
+
+			$response['solutions'] = isset($get_solutions) ? $get_solutions : [];
+
+			// Get Answer Options
+			$answer_options_response = [];
+			$params = [
+				'question_id' => $id
+			];
+
+			$get_question_answers = $this->Api_model->get_question_answers($params);
+
+			if ($get_question_answers['return']) {
+				foreach ($get_question_answers['data'] as &$question_answers) {
+					$question_answers = (array) $question_answers;
+
+					$question_answers['answer'] = stripslashes($question_answers['answer']);
+					$question_answers['answer_images'] = json_decode(stripslashes($question_answers['answer_images']), true);
+
+					$answer_options_response[] = $question_answers;
+				}
+			}
+
+			$response['answer_options'] = $answer_options_response;
+
+			$this->status_header = 200;
+			$this->output->set_status_header($this->status_header);
+			$this->status_code = $this->status_header;
+			$this->status = 'success';
+			$this->message = 'OK';
+			$this->description = 'Resource Fetched.';
+			$this->data = $response;
+
+			$this->output->set_output(json_encode($this->response()));
+		}
+	}
+
+	private function get_questions_all_v2()
+	{
+		$response = [];
+
+		$question_details = [];
+
+		$params = [
+			'STATE' => 'ACTIVE'
+		];
+
+		$get_questions = $this->Api_model->get_questions($params);
+
+		if ($get_questions['return']) {
+			$response_compiler = [];
+
+			foreach ($get_questions['data'] as &$get_questions_array) {
+				$get_questions_array = (array) $get_questions_array;
+
+				$get_questions_array['title'] = stripslashes($get_questions_array['question_title']);
+				$get_questions_array['question'] = stripslashes($get_questions_array['question']);
+				$get_questions_array['question_images'] = json_decode(stripslashes($get_questions_array['question_images']), true);
+
+				$question_details = [
+					'question_title' => $get_questions_array['question_title'],
+					'question' => $get_questions_array['question'],
+				];
+
+				$question_other_details = [];
+
+				// Get Category Details
+				$params = [
+					'id' => $get_questions_array['category_id']
+				];
+				$get_category_details = $this->Api_model->get_category_details($params);
+
+				// Get Difficulty Details
+				$params = [
+					'id' => $get_questions_array['difficulty_id']
+				];
+				$get_difficulty_details = $this->Api_model->get_difficulty_details($params);
+
+				// Get Question Tags Mapping
+				$params = [
+					'question_id' => $get_questions_array['id']
+				];
+				$get_question_tag_mappings = $this->Api_model->get_question_tag_mappings($params);
+
+				if ($get_question_tag_mappings['return']) {
+					foreach ($get_question_tag_mappings['data'] as &$question_tag_mappings) {
+						$question_tag_mappings = (array) $question_tag_mappings;
+
+						// Get Tag Details
+						$params = [
+							'id' => $question_tag_mappings['tag_id'],
+						];
+						$get_tag_details = $this->Api_model->get_tag_details($params);
+						if ($get_tag_details['return']) {
+							$get_tag_details['data']['tag'] = stripslashes($get_tag_details['data']['tag']);
+							$get_tag_details['data']['tag_description'] = stripslashes($get_tag_details['data']['description']);
+							$get_tag_details['data']['tag_remarks'] = stripslashes($get_tag_details['data']['remarks']);
+
+							$question_tag_mappings['tag_details'] = $get_tag_details['data'];
+						} else {
+							$question_tag_mappings['tag_details'] = [];
+						}
+					}
+				}
+				$question_other_details = [
+					'category_details' => (isset($get_category_details['data']) ? $get_category_details['data'] : []),
+					'difficulty_details' => (isset($get_difficulty_details['data']) ? $get_difficulty_details['data'] : []),
+					'tags' => (isset($get_question_tag_mappings['data']) ? $get_question_tag_mappings['data'] : [])
+				];
+
+				$question_details['question_other_details'] = $question_other_details;
+				$question_details['question_images'] = (isset($get_questions_array['question_images']) ? $get_questions_array['question_images'] : []);
+
+				$response_compiler['question_details'] = $question_details;
+
+				$params = [
+					'question_id' => $get_questions_array['id']
+				];
+
+				$get_solutions = $this->Api_model->get_question_solutions($params);
+
+				if ($get_solutions['return']) {
+					foreach ($get_solutions['data'] as &$get_solutions) {
+
+						$get_solutions = (array) $get_solutions;
+
+						$get_solutions['solution_title'] = stripslashes($get_solutions['solution_title']);
+						$get_solutions['solution_description'] = stripslashes($get_solutions['solution_description']);
+						$get_solutions['solution_images'] = json_decode(stripslashes($get_solutions['solution_images']), true);
+
+						// Get Solution Steps
+						$steps = [];
+
+						$params = [
+							'solution_id' => $get_solutions['id']
+						];
+
+						$get_solution_steps = $this->Api_model->get_question_solution_steps($params);
+
+						foreach ($get_solution_steps['data'] as &$solution_steps) {
+							$solution_steps = (array) $solution_steps;
+
+							$solution_steps['step_title'] = stripslashes($solution_steps['step_title']);
+							$solution_steps['step_description'] = stripslashes($solution_steps['step_description']);
+							$solution_steps['step_result'] = stripslashes($solution_steps['step_result']);
+							$solution_steps['step_images'] = json_decode(stripslashes($solution_steps['step_images']), true);
+
+							$steps[] = [
+								'step_title' => $solution_steps['step_title'],
+								'step_description' => $solution_steps['step_description'],
+								'step_result' => $solution_steps['step_result'],
+								'step_sequence' => $solution_steps['step_result'],
+								'step_images' => $solution_steps['step_images']
+							];
+						}
+
+						$get_solutions['solution_steps'] = $steps;
+					}
+				}
+
+				$response_compiler['solutions'] = isset($get_solutions) ? $get_solutions : [];
+
+				// Get Answer Options
+				$answer_options_response = [];
+				$params = [
+					'question_id' => $get_questions_array['id']
+				];
+
+				$get_question_answers = $this->Api_model->get_question_answers($params);
+
+				if ($get_question_answers['return']) {
+					foreach ($get_question_answers['data'] as &$question_answers) {
+						$question_answers = (array) $question_answers;
+
+						$question_answers['answer'] = stripslashes($question_answers['answer']);
+						$question_answers['answer_images'] = json_decode(stripslashes($question_answers['answer_images']), true);
+
+						$answer_options_response[] = $question_answers;
+					}
+				}
+
+				$response_compiler['answer_options'] = $answer_options_response;
+
+				$response[] = $response_compiler;
+			}
+
+			$this->status_header = 200;
+			$this->output->set_status_header($this->status_header);
+			$this->status_code = $this->status_header;
+			$this->status = 'success';
+			$this->message = 'OK';
+			$this->description = 'Resource Fetched.';
+			$this->data = $response;
+
+			$this->output->set_output(json_encode($this->response()));
+		}
 	}
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------
 } // CLASS CLOSING

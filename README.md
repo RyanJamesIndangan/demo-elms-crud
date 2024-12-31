@@ -47,7 +47,8 @@ Code Repository Platform: GitHub
 3.) Will follow the team's preferred coding convention - I prefer to use snake_case, but I will adapt to any coding standard that the team have.
 4.) Solid audit trailing - notifications, account history etc and what not.
 5.) Question Types - Like True or False, Essay/Situational, Needs auto correct or manual checking for the examiner/admin/moderator, or you know, can be AI to check if the essay is correct.
-6.) Some calls me "10x Developer" some says "Unicorn Developer" but maybe I'm just some regular everyday developer, who knows? (Please Hire Me lmao 🙏🙏🙏, I work smarter and harder than most 🙇🙇🙇, I'm a fun guy, you don't want another stressful colleague don't you? Hehe 😆✌️).
+6.) Can get questions via categories, difficulties etc.
+7.) Some calls me "10x Developer" some says "Unicorn Developer" but maybe I'm just some regular everyday developer, who knows? (Please Hire Me lmao 🙏🙏🙏, I work smarter and harder than most 🙇🙇🙇, I'm a fun guy, you don't want another stressful colleague don't you? Hehe 😆✌️).
 
 # Work Tracker
 Initial Work: December 30, 2024 at 6:58 PM until December 31, 2024 at 3:00 AM (9 hours total, but around 6~8 hours of work)

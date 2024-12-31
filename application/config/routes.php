@@ -65,6 +65,9 @@ $route['api/check-endpoint-required-data'] = 'api/check_endpoint_required_data';
 $route['api/questions'] = 'api/questions';
 $route['api/questions/(:any)'] = 'api/questions/$1';
 
+$route['api/questions_v2'] = 'api/questions_v2';
+$route['api/questions_v2/(:any)'] = 'api/questions_v2/$1';
+
 
   
   

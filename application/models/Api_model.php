@@ -669,4 +669,181 @@ class Api_Model extends CI_Model
     $this->return = true;
     return $this->response();
   }
+
+  // CATEGORIES
+  public function get_category_details($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // CHECK CATEGORY NOT EXIST
+    $get_category_details = $this->Category_model->get_category_details($data);
+
+    $description = 'No Category Found.';
+    $this->return = false;
+    $this->data = [];
+
+    if ($get_category_details != null) {
+      $description = 'Category Details Fetched.';
+
+      $this->return = true;
+      $this->data = (array) $get_category_details;
+    }
+
+    $this->status_header = 200;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'OK';
+    $this->description = $description;
+
+    return $this->response();
+  }
+
+  public function get_categories($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // CHECK CATEGORIES NOT EXIST
+    $get_categories = $this->Category_model->get_categories($data);
+
+    $description = 'No Categories Found.';
+    $this->return = false;
+    $this->data = [];
+
+    if ($get_categories != null) {
+      $description = 'Categories Fetched.';
+
+      $this->return = true;
+      $this->data = (array) $get_categories;
+    }
+
+    $this->status_header = 200;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'OK';
+    $this->description = $description;
+
+    return $this->response();
+  }
+
+  // DIFFICULTIES
+  public function get_difficulty_details($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // CHECK DIFFICULTY NOT EXIST
+    $get_difficulty_details = $this->Difficulty_model->get_difficulty_details($data);
+
+    $description = 'No Difficulty Found.';
+    $this->return = false;
+    $this->data = [];
+
+    if ($get_difficulty_details != null) {
+      $description = 'Difficulty Details Fetched.';
+
+      $this->return = true;
+      $this->data = (array) $get_difficulty_details;
+    }
+
+    $this->status_header = 200;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'OK';
+    $this->description = $description;
+
+    return $this->response();
+  }
+
+  public function get_difficulties($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // CHECK DIFFICULTIES NOT EXIST
+    $get_difficulties = $this->Difficulty_model->get_difficulties($data);
+
+    $description = 'No Difficulties Found.';
+    $this->return = false;
+    $this->data = [];
+
+    if ($get_difficulties != null) {
+      $description = 'Difficulties Fetched.';
+
+      $this->return = true;
+      $this->data = (array) $get_difficulties;
+    }
+
+    $this->status_header = 200;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'OK';
+    $this->description = $description;
+
+    return $this->response();
+  }
+
+    // TAGS
+    public function get_tag_details($data)
+    {
+      $data = $this->sanitationService->sanitize($data);
+  
+      // CHECK TAG NOT EXIST
+      $get_tag_details = $this->Tag_model->get_tag_details($data);
+  
+      $description = 'No Tag Found.';
+      $this->return = false;
+      $this->data = [];
+  
+      if ($get_tag_details != null) {
+        $description = 'Tag Details Fetched.';
+  
+        $this->return = true;
+        $this->data = (array) $get_tag_details;
+      }
+  
+      $this->status_header = 200;
+      $this->output->set_status_header($this->status_header);
+  
+      $this->status_code = $this->status_header;
+      $this->status = 'success';
+      $this->message = 'OK';
+      $this->description = $description;
+  
+      return $this->response();
+    }
+  
+    public function get_tags($data)
+    {
+      $data = $this->sanitationService->sanitize($data);
+  
+      // CHECK TAGS NOT EXIST
+      $get_tags = $this->Tag_model->get_tags($data);
+  
+      $description = 'No Tags Found.';
+      $this->return = false;
+      $this->data = [];
+  
+      if ($get_tags != null) {
+        $description = 'Tags Fetched.';
+  
+        $this->return = true;
+        $this->data = (array) $get_tags;
+      }
+  
+      $this->status_header = 200;
+      $this->output->set_status_header($this->status_header);
+  
+      $this->status_code = $this->status_header;
+      $this->status = 'success';
+      $this->message = 'OK';
+      $this->description = $description;
+  
+      return $this->response();
+    }
 } // CLASS CLOSING
