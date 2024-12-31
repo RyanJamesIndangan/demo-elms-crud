@@ -376,6 +376,85 @@ class Api_Model extends CI_Model
     return $this->response();
   }
 
+  public function patch_question($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // UPDATE QUESTION TABLE
+    $update_fields = [
+      'question' => $data['question'],
+      'modified_by' => $data['user_id']
+    ];
+
+    $where_condition = [
+      'id' => $data['question_id']
+    ];
+
+    $patch_question = $this->Question_model->update_question($update_fields, $where_condition);
+
+    if (!$patch_question) {
+      // failed to patch question table
+      $this->status_header = 500;
+      $this->output->set_status_header($this->status_header);
+
+      $this->status_code = $this->status_header;
+      $this->status = 'failed';
+      $this->message = 'Internal Server Error';
+      $this->description = 'Failed to patch question, please contact the support and try again later.';
+
+      $this->return = false;
+      return $this->response();
+    }
+
+    $this->status_header = 200;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'OK';
+    $this->description = 'Question Patched.';
+
+    $this->return = true;
+    return $this->response();
+  }
+
+  public function delete_question($data)
+  {
+    $data = $this->sanitationService->sanitize($data);
+
+    // DELETE ROW IN QUESTION TABLE
+    $where_condition = [
+      'id' => $data['question_id']
+    ];
+
+    $delete_question = $this->Question_model->delete_question($where_condition);
+
+    if (!$delete_question) {
+      // failed to delete question table
+      $this->status_header = 500;
+      $this->output->set_status_header($this->status_header);
+
+      $this->status_code = $this->status_header;
+      $this->status = 'failed';
+      $this->message = 'Internal Server Error';
+      $this->description = 'Failed to delete question, please contact the support and try again later.';
+
+      $this->return = false;
+      return $this->response();
+    }
+
+    $this->status_header = 200;
+    $this->output->set_status_header($this->status_header);
+
+    $this->status_code = $this->status_header;
+    $this->status = 'success';
+    $this->message = 'OK';
+    $this->description = 'Question Deleted.';
+
+    $this->return = true;
+    return $this->response();
+  }
+
   // QUESTION SOLUTION
   public function get_question_solution_details($data)
   {

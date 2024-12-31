@@ -40,6 +40,7 @@ Code Repository Platform: GitHub
 4.) The database I designed and developed is highly scalable, meaning we can diverse from whatever spaghetti I build hahaha.
 5.) Mostly I used TEXT so that you can try whatever, usually I use VARCHAR and limit it by 2s.. 2,4,8,16 and so on until 2048, cause if the column can be higher than that, I will just use TEXT instead
 6.) Assuming there are images existing already, instead of uploading the images as attachment, since there's a comment in this link (https://cooing-bladder-b5b.notion.site/Sample-Question-Template-in-JSON-1582c74459628064b455eb89722bdae3) saying "This is just a sample if we want to add a image in a question, just put any public url for me access it and fetch it in the game" -Novi Rañoja
+7.) Some endpoints doesn't validate the user_id (the thing that assumes someone is logged in) cause I hope I already demonstrated my capabilities, these things are just some fancy sprinkles for demo but very important in production, just to lessen my workload while doing this trial task hehe
 
 # Future Updates When Hired 👀
 1.) Robust Validations - For Example: Checks for same question, accepts only 1 correct answer, checks image url if existing and a lot lot more.

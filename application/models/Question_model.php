@@ -44,4 +44,12 @@ class Question_model extends CI_Model
 
 		return ($this->db->affected_rows() > 0);
 	}
+
+  public function delete_question($where_condition)
+  {
+      $this->db->where($where_condition);
+      $this->db->delete($this->table_name);
+
+      return ($this->db->affected_rows() > 0);
+  }
 }
