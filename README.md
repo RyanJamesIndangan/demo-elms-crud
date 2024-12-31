@@ -53,3 +53,7 @@ Code Repository Platform: GitHub
 
 # Work Tracker
 Initial Work: December 30, 2024 at 6:58 PM until December 31, 2024 at 3:00 AM (9 hours total, but around 6~8 hours of work)
+
+Second Time Working on this project:  December 31, 2024 at around 2:30 PM until  December 31, 2024 at around 4:40 PM
+
+Total Working time on this project including database design and development: 11 hours (approximately 7~9 hours of work, the rest are compilation of short breaks) 
