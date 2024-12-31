@@ -351,7 +351,7 @@ class Api extends CI_Controller
 
 		switch ($method) {
 				case 'GET':
-						$this->get_question_by_id($id);
+						$this->get_questions($id);
 						break;
 				
 				case 'POST':
@@ -421,6 +421,7 @@ class Api extends CI_Controller
 								'solution_id' => $insert_question_solution['data']['question_solution_id'],
 								'step_title' => $solution_step['step_title'],
 								'step_description' => $solution_step['step_description'],
+								'step_result' => $solution_step['step_result'],
 								'step_sequence' => $solution_step['step_sequence'],
 								'step_images' => json_encode($solution_step['step_images']),
 								'modified_by' => $user_id,
@@ -486,39 +487,223 @@ class Api extends CI_Controller
 		}
 	}
 
-	private function get_question_by_id($id) // UNTESTED
+	private function get_questions($id)
 	{
 		// No Solid Validation like a boss, just kidding, this is demo come on now, please have mercy, it's just a demo.
 		if(isset($id) && !empty($id)) {
-
-			$params = [
-				'id' => $id
-			];
-
-			$get_question_details = $this->Api_model->get_question_details($params);
-
-			$get_question_details['data']['title'] = stripslashes($get_question_details['data']['question_title']);
-			$get_question_details['data']['question'] = stripslashes($get_question_details['data']['question']);
-			$get_question_details['data']['question_images'] = json_decode(stripslashes($get_question_details['data']['question_images']), true);
-
-			$this->output->set_output(json_encode($this->response_model($get_question_details)));
+			$this->get_question_by_id($id);
 		} else {
+			$this->get_questions_all();
+		}
+	}
+
+	private function get_question_by_id($id)
+	{
+		$response = [];
+
+		$params = [
+			'id' => $id
+		];
+
+		$get_question_details = $this->Api_model->get_question_details($params);
+
+		$get_question_details['data']['title'] = stripslashes($get_question_details['data']['question_title']);
+		$get_question_details['data']['question'] = stripslashes($get_question_details['data']['question']);
+		$get_question_details['data']['question_images'] = json_decode(stripslashes($get_question_details['data']['question_images']), true);
+
+		// Sample Question Template in JSON
+		// Get Solution (will only fetch 1 row since we are using "get_question_solution_details" and not "get_question_solutions")
+		$params = [
+			'question_id' => $id
+		];
+
+		$get_solution_details = $this->Api_model->get_question_solution_details($params);
+
+		if($get_solution_details['return']) {
+			$get_solution_details['data']['solution_title'] = stripslashes($get_solution_details['data']['solution_title']);
+			$get_solution_details['data']['solution_description'] = stripslashes($get_solution_details['data']['solution_description']);
+			$get_solution_details['data']['solution_images'] = json_decode(stripslashes($get_solution_details['data']['solution_images']), true);
+
+			// Get Solution Steps
+			$steps = [];
+
 			$params = [
-				'state' => 'ACTIVE'
+				'solution_id' => $get_solution_details['data']['id']
 			];
 
-			$get_questions = $this->Api_model->get_questions($params);
+			$get_solution_steps = $this->Api_model->get_question_solution_steps($params);
+			
+			foreach($get_solution_steps['data'] as &$solution_steps) {
+				$solution_steps = (array) $solution_steps;
 
-			foreach($get_questions['data'] as &$questions) {
-				$questions = (array) $questions;
+				$solution_steps['step_title'] = stripslashes($solution_steps['step_title']);
+				$solution_steps['step_description'] = stripslashes($solution_steps['step_description']);
+				$solution_steps['step_result'] = stripslashes($solution_steps['step_result']);
+				$solution_steps['step_images'] = json_decode(stripslashes($solution_steps['step_images']), true);
 
-				$questions['title'] = stripslashes($questions['question_title']);
-				$questions['question'] = stripslashes($questions['question']);
-				$questions['question_images'] = json_decode(stripslashes($questions['question_images']), true);
+				$steps[] = [
+					'Title' => $solution_steps['step_title'],
+					'step_description' => $solution_steps['step_description'],
+					'step_result' => $solution_steps['step_result'],
+					'ImageUrl' => $solution_steps['step_images']
+				];
 			}
 
-			$this->output->set_output(json_encode($this->response_model($get_questions)));
+			// Get Answers
+			$correct_answer = '';
+			$options = [];
+
+			$params = [
+				'question_id' => $id
+			];
+
+			$get_question_answers = $this->Api_model->get_question_answers($params);
+
+			if($get_question_answers['return']) {
+				foreach($get_question_answers['data'] as &$question_answers) {
+					$question_answers = (array) $question_answers;
+
+					$question_answers['answer'] = stripslashes($question_answers['answer']);
+					$question_answers['answer_images'] = json_decode(stripslashes($question_answers['answer_images']), true);
+
+					if($question_answers['is_correct_answer'] == 'true') {
+						$correct_answer = $question_answers['answer'];
+					}
+
+					$options[] = [
+						'answer' => $question_answers['answer']
+					];
+				}
+			
+			// $get_solution_details['data']['solution_steps'] = $get_solution_steps;
+			$get_solution_details['data']['Steps'] = $get_solution_steps;
+			$response = [
+				'Question' => $get_question_details['data']['question'],
+				'Solution' => $get_solution_details['data']['solution_description'],
+				'CorrectAnswer' => $correct_answer,
+				'Options' => $options,
+				'Steps' => $steps,
+				'ImageUrl' => $get_question_details['data']['question_images']
+			];
+			
+
+			// $get_question_details['data']['solution'] = $get_solution_details['data'];
+			}
 		}
+
+		$this->status_header = 200;
+		$this->output->set_status_header($this->status_header);
+		$this->status_code = $this->status_header;
+		$this->status = 'success';
+		$this->message = 'OK';
+		$this->description = 'Resource Fetched.';
+		$this->data = $response;
+
+		$this->output->set_output(json_encode($this->response()));
+	}
+
+	private function get_questions_all()
+	{
+		$response = [];
+
+		$params = [
+			'state' => 'ACTIVE'
+		];
+
+		$get_questions = $this->Api_model->get_questions($params);
+		foreach($get_questions['data'] as &$get_questions) {
+			$get_questions = (array) $get_questions;
+
+			$get_questions['title'] = stripslashes($get_questions['question_title']);
+			$get_questions['question'] = stripslashes($get_questions['question']);
+			$get_questions['question_images'] = json_decode(stripslashes($get_questions['question_images']), true);
+
+			// Sample Question Template in JSON
+			// Get Solution (will only fetch 1 row since we are using "get_question_solution_details" and not "get_question_solutions")
+			$params = [
+				'question_id' => $get_questions['id']
+			];
+
+			$get_solution_details = $this->Api_model->get_question_solution_details($params);
+
+			if($get_solution_details['return']) {
+				$get_solution_details['data']['solution_title'] = stripslashes($get_solution_details['data']['solution_title']);
+				$get_solution_details['data']['solution_description'] = stripslashes($get_solution_details['data']['solution_description']);
+				$get_solution_details['data']['solution_images'] = json_decode(stripslashes($get_solution_details['data']['solution_images']), true);
+
+				// Get Solution Steps
+				$steps = [];
+
+				$params = [
+					'solution_id' => $get_solution_details['data']['id']
+				];
+
+				$get_solution_steps = $this->Api_model->get_question_solution_steps($params);
+				
+				foreach($get_solution_steps['data'] as &$solution_steps) {
+					$solution_steps = (array) $solution_steps;
+
+					$solution_steps['step_title'] = stripslashes($solution_steps['step_title']);
+					$solution_steps['step_description'] = stripslashes($solution_steps['step_description']);
+					$solution_steps['step_result'] = stripslashes($solution_steps['step_result']);
+					$solution_steps['step_images'] = json_decode(stripslashes($solution_steps['step_images']), true);
+
+					$steps[] = [
+						'Title' => $solution_steps['step_title'],
+						'step_description' => $solution_steps['step_description'],
+						'step_result' => $solution_steps['step_result'],
+						'ImageUrl' => $solution_steps['step_images']
+					];
+				}
+
+				// Get Answers
+				$correct_answer = '';
+				$options = [];
+
+				$params = [
+					'question_id' => $get_questions['id']
+				];
+
+				$get_question_answers = $this->Api_model->get_question_answers($params);
+
+				if($get_question_answers['return']) {
+					foreach($get_question_answers['data'] as &$question_answers) {
+						$question_answers = (array) $question_answers;
+
+						$question_answers['answer'] = stripslashes($question_answers['answer']);
+						$question_answers['answer_images'] = json_decode(stripslashes($question_answers['answer_images']), true);
+
+						if($question_answers['is_correct_answer'] == 'true') {
+							$correct_answer = $question_answers['answer'];
+						}
+
+						$options[] = [
+							'answer' => $question_answers['answer']
+						];
+					}
+				
+					$get_solution_details['data']['Steps'] = $get_solution_steps;
+					$response[] = [
+						'Question' => $get_questions['question'],
+						'Solution' => $get_solution_details['data']['solution_description'],
+						'CorrectAnswer' => $correct_answer,
+						'Options' => $options,
+						'Steps' => $steps,
+						'ImageUrl' => $get_questions['question_images']
+					];
+				}
+			}
+		}
+
+		$this->status_header = 200;
+		$this->output->set_status_header($this->status_header);
+		$this->status_code = $this->status_header;
+		$this->status = 'success';
+		$this->message = 'OK';
+		$this->description = 'Resource Fetched.';
+		$this->data = $response;
+
+		$this->output->set_output(json_encode($this->response()));
 	}
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------
 } // CLASS CLOSING
